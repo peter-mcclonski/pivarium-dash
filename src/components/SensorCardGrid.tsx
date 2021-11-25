@@ -1,5 +1,5 @@
 import React from "react";
-import Sensor from "../sensors/Sensor";
+import Sensor from "../api/Sensor";
 import {Grid} from "@mui/material";
 import SensorCard from "./SensorCard";
 
@@ -22,7 +22,7 @@ export default class SensorCardGrid extends React.Component<SensorCardGridProps,
         let sensorCards = new Array<JSX.Element>();
         this.props.sensors.forEach((value: Sensor, key: string) => {
             sensorCards.push(
-                <Grid item xs={4} key={key}>
+                <Grid item xs={6} key={key}>
                     <SensorCard sensor={value} lastRefresh={this.props.lastRefresh}/>
                 </Grid>
             )

@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.css';
-import SensorManager from "./sensors/SensorManager";
-import SensorCardGrid from "./components/SensorCardGrid";
-import Sensor from "./sensors/Sensor";
+import StationManager from "./managers/StationManager";
+import StationCardGrid from "./components/StationCardGrid";
 
 interface AppProps {
 }
@@ -12,7 +11,7 @@ interface AppState {
 }
 
 export default class App extends React.Component<AppProps, AppState> {
-  private sensorMngr: SensorManager;
+  private sensorMngr: StationManager;
   // @ts-ignore
   private interval: Timeout;
   constructor(props: AppProps) {
@@ -22,8 +21,7 @@ export default class App extends React.Component<AppProps, AppState> {
       lastRefresh: new Date()
     }
 
-    this.sensorMngr = new SensorManager();
-    this.sensorMngr.registerSensor(new Sensor("5"))
+    this.sensorMngr = new StationManager();
     //this.autoRefresh()
   }
 
@@ -44,6 +42,6 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
-    return <SensorCardGrid sensors={this.sensorMngr.getSensors()} lastRefresh={this.state.lastRefresh} />
+    return <StationCardGrid stations={this.sensorMngr.getStations()} lastRefresh={this.state.lastRefresh} />
   }
 }

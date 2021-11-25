@@ -1,5 +1,5 @@
 import {Component} from "react";
-import Sensor from "../sensors/Sensor";
+import Sensor from "../api/Sensor";
 import {Card} from "@mui/material";
 
 interface SensorCardProps {
@@ -21,7 +21,7 @@ export default class SensorCard extends Component<SensorCardProps, SensorCardSta
         return (
             <Card>
                 {
-                    `${this.sensor.getStatus().id}: ${this.sensor.getStatus().status}`
+                    `${this.sensor.getUUID()}: ${this.sensor.stype}`
                 }
             </Card>
         )
