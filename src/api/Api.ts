@@ -1,23 +1,19 @@
-import SensorResult from "./SensorResult";
+import SensorReading from "./SensorReading";
 import Station from "./Station";
 import Sensor from "./Sensor";
 
 export default class Api {
-    private ax;
-    constructor() {
-        this.ax = require('axios');
+    private static ax = require('axios');
+
+    static async pollSensor(ident: string): Promise<SensorReading> {
+        let result = await Api.ax.get(`/switchstat?ident=${ident}`);
+        let data = result.data;
+        return Object.assign(new SensorReading(), data);
     }
 
-    async pollSensor(ident: string): Promise<SensorResult> {
-        let result = await this.ax.get(`/switchstat?ident=${ident}`);
+    static async getSensors(station: Station): Promise<Array<Sensor>> {
+        let result = await Api.ax.get(`/sensor/list?ident=${station.uuid}`)
         let data = result.data;
-        return Object.assign(new SensorResult(), data);
-    }
-
-    async getSensors(station: Station): Promise<Array<Sensor>> {
-        let result = await this.ax.get(`sensor/list?ident=${station.uuid}`)
-        let data = result.data;
-        console.log(result)
         let sensors = new Array<Sensor>()
         data.forEach((value: any) => {
             sensors.push(Object.assign(new Sensor(), value))
@@ -25,13 +21,24 @@ export default class Api {
         return sensors
     }
 
-    async getStations(): Promise<Array<Station>> {
-        let result = await this.ax.get(`/station/list`);
+    static async loadRecentReadings(sensor: Sensor): Promise<Sensor> {
+        let result = await Api.ax.get(`/sensor/recent?ident=${sensor.uuid}`)
+        let readings = new Array<SensorReading>()
+        result.data.forEach((value: any) => {
+            readings.push(Object.assign(new SensorReading(), value))
+        })
+        sensor.readings = readings
+        return sensor
+    }
+
+    static async getStations(): Promise<Array<Station>> {
+        let result = await Api.ax.get(`/station/list`);
         let data = result.data;
         let stations = new Array<Station>()
         data.forEach((value: any) => {
             stations.push(Object.assign(new Station(), value))
         })
+        console.log(data)
         return stations
     }
 }
